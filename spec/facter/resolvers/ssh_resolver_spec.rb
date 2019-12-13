@@ -9,16 +9,11 @@ describe 'SshResolver' do
         paths.each { |path| allow(File).to receive(:directory?).with(path).and_return(false) unless path == '/etc' }
         allow(File).to receive(:directory?).with('/etc').and_return(true)
 
-        file_names.each do |file_name|
-          unless file_name == 'ssh_host_rsa_key.pub'
-            allow(File).to receive(:file?).with('/etc/' + file_name)
-                                          .and_return(false)
-          end
-        end
-
         allow(File).to receive(:file?).with('/etc/ssh_host_ecdsa_key.pub').and_return(true)
         allow(File).to receive(:file?).with('/etc/ssh_host_rsa_key.pub').and_return(true)
         allow(File).to receive(:file?).with('/etc/ssh_host_ed25519_key.pub').and_return(true)
+        allow(File).to receive(:file?).with('/etc/ssh_host_dsa_key.pub').and_return(false)
+
         expect(File).to receive(:read).with('/etc/ssh_host_ecdsa_key.pub').and_return(ecdsa_content)
         expect(File).to receive(:read).with('/etc/ssh_host_rsa_key.pub').and_return(rsa_content)
         expect(File).to receive(:read).with('/etc/ssh_host_ed25519_key.pub').and_return(ed25519_content)
